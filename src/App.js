@@ -1,23 +1,44 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { useRef ,useState} from 'react';
 
 function App() {
+  const [todoList,settodoList]=useState([]);
+  const inputRef=useRef();
+  const listhandeler=()=>{
+    const text =inputRef.current.value;
+    const newitem = {completed:false ,text}
+    settodoList([...todoList, newitem]);
+    inputRef.current.value="";
+  }
+
+   const handlelclick =(index)=>{
+     const newtodoList = [...todoList];
+     newtodoList[index].completed=!newtodoList[index].completed;
+     settodoList(newtodoList);
+  }
+  const handledelet =(index)=>{
+    const newtodoList = [...todoList];
+    newtodoList.splice(index ,1);
+    settodoList(newtodoList);
+ }
+  
+  console.log(todoList);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+       <div className="to-do-container">
+      <h1>To Do List App</h1>
+      <ul>
+        {todoList.map(({text , completed},index) =>{
+          return <div className='item'>
+          <li className={completed ?"done":" "} key={index} onClick={()=>handlelclick(index)}>{text}</li>
+         <span className="delete" onClick={()=>handledelet(index)}>❌</span>
+          </div>
+
+        })}
+      </ul>
+      <input ref={inputRef} placeholder='enter item...' />
+      <button onClick={listhandeler}>Add</button>
+      </div>
     </div>
   );
 }
